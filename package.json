@@ -1,0 +1,22 @@
+{
+  "name": "algorithms-datastructures",
+  "version": "1.0.0",
+  "description": "Jest Unit Testing Algorithms",
+  "main": "Algorithms-And-Data-Structures.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Edd-Venv/Algorithms-DataStructures.git"
+  },
+  "author": "Edd-Venv",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Edd-Venv/Algorithms-DataStructures/issues"
+  },
+  "homepage": "https://github.com/Edd-Venv/Algorithms-DataStructures#readme",
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
