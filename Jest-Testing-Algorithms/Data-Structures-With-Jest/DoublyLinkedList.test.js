@@ -170,11 +170,7 @@ describe("DOUBLY LINKED-LIST", () => {
 
     DLlist.insert(4, 3);
     console.log(DLlist.getLast());
-    /**
-     * GITTTT INITAILIZED
-     *
-     *
-     */
+
     expect(DLlist.getLast()).toHaveProperty("data", 5);
     expect(DLlist.getLast()).toHaveProperty("next", null);
     expect(DLlist.getLast()).toHaveProperty("previous.data", 4);
