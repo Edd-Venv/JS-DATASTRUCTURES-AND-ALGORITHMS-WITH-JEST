@@ -171,7 +171,7 @@ describe("DOUBLY LINKED-LIST", () => {
     DLlist.insert(4, 3);
     console.log(DLlist.getLast());
     /**
-     * GITTTT
+     * GITTTT INITAILIZED
      *
      *
      */
