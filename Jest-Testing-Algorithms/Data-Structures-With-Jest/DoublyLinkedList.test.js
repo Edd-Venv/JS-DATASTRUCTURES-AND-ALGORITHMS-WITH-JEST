@@ -183,7 +183,7 @@ class DoublyLinkedList {
   }
 }
 
-describe("DOUBLY LINKED-LIST", () => {
+describe.skip("DOUBLY LINKED-LIST", () => {
   it("UNSHIFT() Should Add A New Node At The Start", () => {
     const DLlist = new DoublyLinkedList();
     DLlist.unshift(3);
