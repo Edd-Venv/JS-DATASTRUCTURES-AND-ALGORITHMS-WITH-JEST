@@ -51,6 +51,10 @@ class DoublyLinkedList {
   }
 
   getLast() {
+    if (this.length === 1) {
+      return this.head;
+    }
+
     let currentNode = this.head;
 
     while (currentNode && currentNode.next) {
