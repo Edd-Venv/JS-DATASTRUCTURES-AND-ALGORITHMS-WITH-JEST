@@ -47,6 +47,8 @@ class DoublyLinkedList {
       this.head.previous = newHead;
       this.head = newHead;
       this.length++;
+
+      return true;
     }
   }
 
