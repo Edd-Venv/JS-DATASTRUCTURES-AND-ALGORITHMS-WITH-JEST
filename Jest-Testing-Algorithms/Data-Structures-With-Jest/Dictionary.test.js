@@ -9,13 +9,22 @@ class Dictionary {
   }
 
   add(key, value) {
-    this.dataStore[key] = value;
-    this.length++;
+    if (typeof key === "string") {
+      this.dataStore[key.toUpperCase()] = value;
+      this.length++;
+    } else {
+      this.dataStore[key] = value;
+      this.length++;
+    }
   }
 
   find(key) {
     if (key) {
-      return this.dataStore[key];
+      if (typeof key === "string") {
+        return this.dataStore[key.toUpperCase()];
+      } else {
+        return this.dataStore[key];
+      }
     }
     return false;
   }
@@ -24,18 +33,23 @@ class Dictionary {
     if (!key) {
       return;
     }
-    delete this.dataStore[key];
-    this.length--;
+    if (typeof key === "string") {
+      delete this.dataStore[key.toUpperCase()];
+      this.length--;
+    } else {
+      delete this.dataStore[key];
+      this.length--;
+    }
   }
 
   showAll() {
+    const keys = Object.keys(this.dataStore).sort();
     let result = "\n";
 
-    const key = Object.keys(this.dataStore);
-    for (let i = 0; i < this.length; i++) {
-      let value = this.dataStore[key[i]];
-      result += key[i] + ": " + value + "\n";
-    }
+    keys.forEach(key => {
+      let value = this.dataStore[key];
+      result += key + ": " + value + "\n";
+    });
     return result;
   }
 
@@ -55,7 +69,7 @@ describe("DICTIONARY", () => {
     dictionary.add("First", 1);
     dictionary.add("Second", 2);
 
-    expect(dictionary.dataStore).toMatchObject({ First: 1 });
+    expect(dictionary.dataStore).toMatchObject({ FIRST: 1 });
   });
 
   it("FIND(), Should Search Using A Value And Return A Value ", () => {
@@ -68,13 +82,14 @@ describe("DICTIONARY", () => {
 
   it("showAll(), Should Display The Key Value Pairs", () => {
     const dictionary = new Dictionary();
-    dictionary.add("first", 1);
-    dictionary.add("Second", 2);
-    dictionary.add("Third", "3");
-    dictionary.remove("Third");
-    dictionary.add("Third", 3);
+    dictionary.add("Edd", 1);
+    dictionary.add("Max", 2);
+    dictionary.add("frank", "3");
+    dictionary.remove("frank");
+    dictionary.add("frank", 3);
+
     expect(dictionary.showAll()).toMatch(
-      "\n" + "first: 1" + "\n" + "Second: 2" + "\n" + "Third: 3" + "\n"
+      "\n" + "EDD: 1" + "\n" + "FRANK: 3" + "\n" + "MAX: 2" + "\n"
     );
   });
 
