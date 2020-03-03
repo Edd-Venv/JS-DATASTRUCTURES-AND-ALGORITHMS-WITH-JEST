@@ -16,6 +16,7 @@ class Dictionary {
       this.dataStore[key] = value;
       this.length++;
     }
+    return true;
   }
 
   find(key) {
@@ -59,6 +60,7 @@ class Dictionary {
 
   clear() {
     this.dataStore = new Array();
+    this.length = 0;
     return this.dataStore;
   }
 }
@@ -102,6 +104,19 @@ describe("DICTIONARY", () => {
     expect(dictionary.count()).toBe(3);
   });
 
+  it("REMOVE(), Should Remove A Key Value Pair", () => {
+    const dictionary2 = new Dictionary();
+
+    expect(dictionary2.add("first", 1)).toBeTruthy();
+    expect(dictionary2.dataStore).toMatchObject({ FIRST: 1 });
+    dictionary2.add("second", 2);
+    expect(dictionary2.dataStore).toMatchObject({ FIRST: 1, SECOND: 2 });
+    dictionary2.remove("second");
+    expect(dictionary2.dataStore).toMatchObject({ FIRST: 1 });
+    dictionary2.remove("first");
+    expect(dictionary2.dataStore).toEqual(new Array());
+  });
+
   it("CLEAR(), Should Clear The Dictionary", () => {
     const dictionary = new Dictionary();
     dictionary.add("first", 1);
@@ -110,13 +125,55 @@ describe("DICTIONARY", () => {
     dictionary.clear();
     expect(dictionary.dataStore).toEqual(new Array());
   });
+});
 
-  it("REMOVE(), Should Delete A Key Value Pair From The Dictionary", () => {
-    const dictionary = new Dictionary();
-    dictionary.add("first", 1);
-    dictionary.add("Second", 2);
-    dictionary.add("Third", "3");
-    dictionary.remove("Third");
-    //console.log(dictionary);
+//                                    IMPLEMENTATION(WORD OCCURRENCES)
+
+function ocurrences(str) {
+  const result = new Dictionary();
+  let word = "";
+
+  for (let j = 0; j < str.length; j++) {
+    if (str[j] !== " ") {
+      word += str[j].toUpperCase();
+    } else if (str[j] === " ") {
+      if (result.find(word)) {
+        result.dataStore[word]++;
+        word = "";
+      } else if (!result.find(word)) {
+        result.add(word, 1);
+        word = "";
+      }
+    }
+  }
+
+  if (result.find(word)) {
+    result.dataStore[word]++;
+    word = "";
+  } else if (!result.find(word)) {
+    result.add(word, 1);
+    word = "";
+  }
+  return result.showAll();
+}
+
+describe("DICTIONARY IMPLEMENTATION", () => {
+  it("OCCURRENCES(), Should Return A Sorted Object With Each Word And Its Number Of Occurrences", () => {
+    const str = "the brown fox jumped over the blue fox";
+    expect(ocurrences(str)).toMatch(
+      "\n" +
+        "BLUE: 1" +
+        "\n" +
+        "BROWN: 1" +
+        "\n" +
+        "FOX: 2" +
+        "\n" +
+        "JUMPED: 1" +
+        "\n" +
+        "OVER: 1" +
+        "\n" +
+        "THE: 2" +
+        "\n"
+    );
   });
 });
