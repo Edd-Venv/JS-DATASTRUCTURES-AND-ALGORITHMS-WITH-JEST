@@ -2,12 +2,17 @@
 PROVIDES FAST INSERTION, DELETION, AND RETRIVAL
 BUT BAD FOR SEARCHING
 COLLISION HANDLYING USING CHAINING BUT NOT IDEAL FOR LARGE DATA
+
+Method to use: if the size of the array can be up to half the number of elements to be
+stored, you should use separate chaining; but if the size of the array can be twice the size
+of the number of elements to be stored, you should use linear probing.
+
 */
 
 class BetterHashTable {
   constructor() {
     this.table = new Array(137);
-    this.simpleHash;
+    this.BetterHash;
     this.put;
     this.showTable;
     this.get;
@@ -128,7 +133,7 @@ class BetterHashTable {
   }
 }
 
-describe("BETTER HASHING/ CHAINING", () => {
+describe.skip("BETTER HASHING/ CHAINING", () => {
   it("BETTERHASH(), Should Compute The Hash Value", () => {
     const hashTable = new BetterHashTable();
     hashTable.buildChains();

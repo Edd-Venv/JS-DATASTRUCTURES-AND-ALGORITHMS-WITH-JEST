@@ -1,16 +1,23 @@
 /*
 PROVIDES FAST INSERTION, DELETION, AND RETRIVAL
-BUT BAD FOR SEARCHING
+BUT BAD FOR SEARCHING, COLLISION HANDLYING USING LINEAR PROBING,
+ALSO NOT IDEAL FOR LARGE DATA
+Linear probing should be chosen over separate chaining when your array for storing
+data can be fairly large.
+
+Method to use: if the size of the array can be up to half the number of elements to be
+stored, you should use separate chaining; but if the size of the array can be twice the size
+of the number of elements to be stored, you should use linear probing.
 */
 
 class BetterHashTable {
   constructor() {
     this.table = new Array(137);
-    this.simpleHash;
+    this.values = [];
+    this.betterHash;
     this.put;
     this.showTable;
     this.get;
-    this.buildChains;
     this.remove;
   }
 
@@ -41,28 +48,30 @@ class BetterHashTable {
   put(key, data) {
     if (typeof data === "string") {
       const str = data.toUpperCase();
-      const position = this.betterHash(key);
-      let index = 0;
-      if (this.table[position][index] === undefined) {
-        this.table[position][index] = str;
-        index++;
+      let position = this.betterHash(key);
+
+      if (this.table[position] === undefined) {
+        this.table[position] = str;
+        this.values[position] = str;
       } else {
-        while (this.table[position][index] !== undefined) {
-          index++;
+        while (this.table[position] !== undefined) {
+          position++;
         }
-        this.table[position][index] = str;
+        this.table[position] = str;
+        this.values[position] = str;
       }
     } else if (typeof data === "number") {
-      const position = this.betterHash(key);
-      let index = 0;
-      if (this.table[position][index] === undefined) {
-        this.table[position][index] = data;
-        index++;
+      let position = this.betterHash(key);
+
+      if (this.table[position] === undefined) {
+        this.table[position] = data;
+        this.values[position] = data;
       } else {
-        while (this.table[position][index] !== undefined) {
-          index++;
+        while (this.table[position] !== undefined) {
+          position++;
         }
-        this.table[position][index] = data;
+        this.table[position] = data;
+        this.values[position] = data;
       }
     }
   }
@@ -79,39 +88,27 @@ class BetterHashTable {
     return false;
   }
 
-  get(key, data) {
-    const position = this.betterHash(key);
-    if (typeof data === "string") {
-      data.toUpperCase();
-      let index = 0;
-      if (this.table[position][index] === data) {
-        return this.table[position][index];
-      }
-      while (
-        this.table[position][index] !== data &&
-        index < this.table[position].length
-      ) {
-        index++;
-      }
-      return this.table[position];
-    } else {
-      let index = 0;
-      if (this.table[position][index] === data) {
-        return this.table[position][index];
-      }
-      while (
-        this.table[position][index] !== data &&
-        index < this.table[position].length
-      ) {
-        index++;
-      }
-      return this.table[position];
-    }
-  }
+  get(key) {
+    if (typeof key === "string") {
+      key.toUpperCase();
+      const hash = this.betterHash(key);
 
-  buildChains() {
-    for (let i = 0; i < this.table.length; i++) {
-      this.table[i] = new Array();
+      for (let i = 0; i < this.table.length; i++) {
+        if (this.table[hash]) {
+          return this.values[hash];
+        }
+      }
+
+      return undefined;
+    } else {
+      const hash = this.betterHash(key);
+
+      for (let i = 0; i < this.table.length; i++) {
+        if (this.table[hash]) {
+          return this.values[hash];
+        }
+      }
+      return undefined;
     }
   }
 
@@ -119,50 +116,84 @@ class BetterHashTable {
     let result = "\n";
 
     for (let i = 0; i < this.table.length; i++) {
-      if (this.table[i][0] !== undefined) {
+      if (this.table[i] !== undefined) {
         result += i + ":" + " " + this.table[i] + "\n";
+      }
+    }
+    return result;
+  }
+
+  showValues() {
+    let result = "\n";
+
+    for (let i = 0; i < this.values.length; i++) {
+      if (this.values[i] !== undefined) {
+        result += "INDEX " + i + ":" + " " + this.values[i] + "\n";
       }
     }
     return result;
   }
 }
 
-describe.skip("BETTER HASHING/ LINEAR PROBING", () => {
+describe("BETTER HASHING/ LINEAR PROBING", () => {
   it("BETTERHASH(), Should Compute The Hash Value", () => {
     const hashTable = new BetterHashTable();
-    hashTable.buildChains();
+
     expect(hashTable.betterHash("David")).toBe(51);
     expect(hashTable.betterHash("ClAytOn")).toBe(89);
     expect(hashTable.betterHash("mikE")).toBe(28);
   });
 
-  it("PUT(), Should Put A Key(Hash Value) Value Pair Into The Table", () => {
+  it("PUT(), Should Put A Key(Hash Value) Value Pair Into The Table And Handle Any Collisions", () => {
     const hashTable = new BetterHashTable();
-    hashTable.buildChains();
+
+    hashTable.put("David", "David");
+    hashTable.put(20, "David");
+    hashTable.put(75, "Clayton");
+    hashTable.put(20, "Mike");
+    expect(hashTable.showTable()).toMatch(
+      "\n" +
+        "20: DAVID" +
+        "\n" +
+        "21: MIKE" +
+        "\n" +
+        "51: DAVID" +
+        "\n" +
+        "75: CLAYTON" +
+        "\n"
+    );
+  });
+
+  it("SHOWVALUES(), Should Display The Values Arrays", () => {
+    const hashTable = new BetterHashTable();
+
     hashTable.put("David", "David");
     hashTable.put(75, "Clayton");
     hashTable.put(20, "Mike");
 
-    expect(hashTable.table).toHaveProperty("51", ["DAVID"]);
-    expect(hashTable.table).toHaveProperty("75", ["CLAYTON"]);
-    expect(hashTable.table).toHaveProperty("20", ["MIKE"]);
+    expect(hashTable.showValues()).toMatch(
+      "\n" +
+        "INDEX 20: MIKE" +
+        "\n" +
+        "INDEX 51: DAVID" +
+        "\n" +
+        "INDEX 75: CLAYTON" +
+        "\n"
+    );
   });
 
   it("GET(), Should Return Data Stored In A Hash Table If It Exists Else It Should Return The Array At That Key", () => {
     const hashTable = new BetterHashTable();
-    hashTable.buildChains();
     hashTable.put(1, 7755);
     hashTable.put(1, "Clayton");
     hashTable.put(1, "Mike");
     hashTable.put("mike", "Mike");
-
-    expect(hashTable.get(1, 7755)).toEqual(7755);
-    expect(hashTable.get(1, 7757)).toEqual([7755, "CLAYTON", "MIKE"]);
+    //console.log(hashTable.get("mike"));
+    //console.log(hashTable.showValues());
   });
 
   it("SHOWTABLE(), Should Return The Table", () => {
     const hashTable = new BetterHashTable();
-    hashTable.buildChains();
     hashTable.put(51, "David");
     hashTable.put(89, "Clayton");
     hashTable.put(28, "Mike");
@@ -172,27 +203,8 @@ describe.skip("BETTER HASHING/ LINEAR PROBING", () => {
     );
   });
 
-  it("BUILDCHAINS(), Should Handle Collions By Creating A Two Dimmensional Array For Each Key(SEPERATE CHAINING)", () => {
-    const hashTable = new BetterHashTable();
-    hashTable.buildChains();
-    hashTable.put(0, "Danny");
-    hashTable.put(0, "Jonathan");
-    hashTable.put(4, "Donnie");
-    hashTable.put(3, "Jennifer");
-
-    expect(hashTable.showTable()).toMatch(
-      "\n" +
-        "0: DANNY,JONATHAN" +
-        "\n" +
-        "3: JENNIFER" +
-        "\n" +
-        "4: DONNIE" +
-        "\n"
-    );
-  });
   it("REMOVE(), Should Delete A Value From The Table", () => {
     const hashTable = new BetterHashTable();
-    hashTable.buildChains();
     hashTable.put(51, "David");
     hashTable.put(89, "Clayton");
     hashTable.put(28, "Mike");
