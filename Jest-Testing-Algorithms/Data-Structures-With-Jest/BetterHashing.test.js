@@ -10,6 +10,7 @@ class BetterHashTable {
     this.put;
     this.showTable;
     this.get;
+    this.buildChains;
   }
 
   betterHash(key) {
@@ -51,15 +52,29 @@ class BetterHashTable {
     return this.table[this.betterHash(key)];
   }
 
+  buildChains() {
+    for (let i = 0; i < this.table.length; i++) {
+      this.table[i] = new Array();
+    }
+  }
+
   showTable() {
     let result = "\n";
-
-    for (let i = 0; i < this.table.length; i++) {
-      if (this.table[i] !== undefined) {
-        result += i + ":" + " " + this.table[i] + "\n";
+    if (this.table[0] === undefined) {
+      for (let i = 0; i < this.table.length; i++) {
+        if (this.table[i] !== undefined) {
+          result += i + ":" + " " + this.table[i] + "\n";
+        }
       }
+      return result;
+    } else if (this.table[0] !== undefined) {
+      for (let i = 0; i < this.table.length; i++) {
+        if (this.table[i][0] !== undefined) {
+          result += i + ":" + " " + this.table[i] + "\n";
+        }
+      }
+      return result;
     }
-    return result;
   }
 }
 
@@ -99,6 +114,17 @@ describe("BETTER HASHING", () => {
     expect(hashTable.showTable()).toMatch(
       "\n" + "28: MIKE" + "\n" + "51: DAVID" + "\n" + "89: CLAYTON" + "\n"
     );
+  });
+
+  it("BUILDCHAINS(), Should Handle Collions By Creating A Two Dimmensional Array For Each Key(SEPERATE CHAINING)", () => {
+    const hashTable = new BetterHashTable();
+    hashTable.buildChains();
+    hashTable.put(0, "Danny");
+    hashTable.put(1, "Jonathan");
+    hashTable.put(4, "Donnie");
+    hashTable.put(3, "Jennifer");
+
+    console.log(hashTable.showTable());
   });
 
   it("SHOWTABLE(), Using Console.log()", () => {
