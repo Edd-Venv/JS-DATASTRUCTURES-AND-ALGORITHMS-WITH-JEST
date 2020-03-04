@@ -9,12 +9,13 @@ class BetterHashTable {
     this.simpleHash;
     this.put;
     this.showTable;
+    this.get;
   }
 
-  betterHash(data) {
+  betterHash(key) {
     const primeNumber = 37;
-    if (typeof data === "string") {
-      const str = data.toUpperCase();
+    if (typeof key === "string") {
+      const str = key.toUpperCase();
       let total = 0;
       for (let i = 0; i < str.length; i++) {
         total += primeNumber * total + str.charCodeAt(i);
@@ -24,9 +25,9 @@ class BetterHashTable {
         total += this.table.length - 1;
       }
       return parseInt(total);
-    } else if (typeof data === "number") {
+    } else if (typeof key === "number") {
       let total = 0;
-      total += primeNumber * total + data;
+      total += primeNumber * total + key;
       total = total % this.table.length;
       if (total < 0) {
         total += this.table.length - 1;
@@ -35,15 +36,19 @@ class BetterHashTable {
     }
   }
 
-  put(data) {
+  put(key, data) {
     if (typeof data === "string") {
       const str = data.toUpperCase();
-      const position = this.betterHash(str);
+      const position = this.betterHash(key);
       this.table[position] = str;
     } else if (typeof data === "number") {
-      const position = this.betterHash(data);
+      const position = this.betterHash(key);
       this.table[position] = data;
     }
+  }
+
+  get(key) {
+    return this.table[this.betterHash(key)];
   }
 
   showTable() {
@@ -68,20 +73,28 @@ describe("BETTER HASHING", () => {
 
   it("PUT(), Should Put A Key(Hash Value) Value Pair Into The Table", () => {
     const hashTable = new BetterHashTable();
-    hashTable.put("David");
-    hashTable.put("Clayton");
-    hashTable.put("Mike");
+    hashTable.put("David", "David");
+    hashTable.put(75, "Clayton");
+    hashTable.put(20, "Mike");
 
     expect(hashTable.table).toHaveProperty("51", "DAVID");
-    expect(hashTable.table).toHaveProperty("89", "CLAYTON");
-    expect(hashTable.table).toHaveProperty("28", "MIKE");
+    expect(hashTable.table).toHaveProperty("75", "CLAYTON");
+    expect(hashTable.table).toHaveProperty("20", "MIKE");
+  });
+
+  it("GET(), Should Retrieve Data Stored In A Hash Table", () => {
+    const hashTable = new BetterHashTable();
+    hashTable.put(2, "David");
+    hashTable.put(1, "Clayton");
+    hashTable.put("mike", "Mike");
+    expect(hashTable.get(1)).toEqual("CLAYTON");
   });
 
   it("SHOWTABLE(), Should Return The Table", () => {
     const hashTable = new BetterHashTable();
-    hashTable.put("David");
-    hashTable.put("Clayton");
-    hashTable.put("Mike");
+    hashTable.put(51, "David");
+    hashTable.put(89, "Clayton");
+    hashTable.put(28, "Mike");
 
     expect(hashTable.showTable()).toMatch(
       "\n" + "28: MIKE" + "\n" + "51: DAVID" + "\n" + "89: CLAYTON" + "\n"
@@ -104,9 +117,9 @@ describe("BETTER HASHING", () => {
     ];
 
     for (let i = 0; i < someNames.length; ++i) {
-      hashTable.put(someNames[i]);
+      hashTable.put(i, someNames[i]);
     }
-    console.log(hashTable.showTable());
+    //console.log(hashTable.showTable());
   });
 });
 
