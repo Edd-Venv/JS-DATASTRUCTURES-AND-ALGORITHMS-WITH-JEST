@@ -77,7 +77,7 @@ function table(arr) {
   return hashTable.showTable();
 }
 
-describe("TABLE", () => {
+describe.skip("TABLE", () => {
   it("table(), Should Create And Display The Table Contents From An Array", () => {
     const arr = ["David", "Jennifer", "Donnie", "Raymond", "Cynthia"];
 
