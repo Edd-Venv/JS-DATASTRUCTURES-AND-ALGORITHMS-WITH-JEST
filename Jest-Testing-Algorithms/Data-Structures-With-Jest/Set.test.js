@@ -56,6 +56,41 @@ class Set {
     }
     return tempSet.dataStore;
   }
+
+  intersect(set) {
+    const tempSet = new Set();
+
+    for (let i = 0; i < this.dataStore.length; i++) {
+      if (set.contains(this.dataStore[i])) {
+        tempSet.add(this.dataStore[i]);
+      }
+    }
+    return tempSet.dataStore;
+  }
+
+  subset(set) {
+    let boolean = true;
+    if (this.size() > set.size()) {
+      return false;
+    }
+
+    this.dataStore.forEach(element => {
+      if (!set.contains(element)) {
+        boolean = false;
+      }
+    });
+    return boolean;
+  }
+
+  difference(set) {
+    const tempSet = new Set();
+    for (let i = 0; i < this.dataStore.length; ++i) {
+      if (!set.contains(this.dataStore[i])) {
+        tempSet.add(this.dataStore[i]);
+      }
+    }
+    return tempSet.dataStore;
+  }
 }
 
 describe("", () => {
@@ -93,5 +128,65 @@ describe("", () => {
     const unionedSet = new Set();
     unionedSet.dataStore = currentSet.union(newSet);
     expect(unionedSet.show()).toEqual([1, 2, 3, 4]);
+  });
+
+  it("INTERSECT(), Should Return A New Set That Contains The Same Elements From Two Sets", () => {
+    const currentSet = new Set();
+    const newSet = new Set();
+    currentSet.add(1);
+    currentSet.add(2);
+    currentSet.add(3);
+    newSet.add(3);
+    newSet.add(4);
+    newSet.add(1);
+    expect(currentSet.intersect(newSet)).toEqual([1, 3]);
+
+    const intersectSet = new Set();
+    intersectSet.dataStore = currentSet.intersect(newSet);
+    expect(intersectSet.show()).toEqual([1, 3]);
+  });
+
+  it("INTERSECT(), Should Return A New Set That Contains The Same Elements From Two Sets", () => {
+    const currentSet = new Set();
+    const newSet = new Set();
+    currentSet.add(1);
+    currentSet.add(2);
+    currentSet.add(3);
+    newSet.add(3);
+    newSet.add(4);
+    newSet.add(1);
+    expect(currentSet.intersect(newSet)).toEqual([1, 3]);
+
+    const intersectSet = new Set();
+    intersectSet.dataStore = currentSet.intersect(newSet);
+    expect(intersectSet.show()).toEqual([1, 3]);
+  });
+
+  it("SUBSET(), Should Return True If Set Is Contained In DataStore", () => {
+    const currentSet = new Set();
+    const newSet = new Set();
+    currentSet.add(1);
+    currentSet.add(2);
+    currentSet.add(3);
+    newSet.add(3);
+    newSet.add(4);
+    newSet.add(1);
+    expect(currentSet.subset(newSet)).toBeFalsy();
+
+    newSet.remove(4);
+    newSet.add(2);
+    expect(currentSet.subset(newSet)).toBeTruthy();
+  });
+
+  it("DIFFERNECE(), Should Return A Set Containing Elements Of The DataStore(Frist/Current Set) That Are Not In the Second Set", () => {
+    const currentSet = new Set();
+    const newSet = new Set();
+    currentSet.add(1);
+    currentSet.add(2);
+    currentSet.add(3);
+    newSet.add(3);
+    newSet.add(4);
+    newSet.add(1);
+    expect(currentSet.difference(newSet)).toEqual([2]);
   });
 });
