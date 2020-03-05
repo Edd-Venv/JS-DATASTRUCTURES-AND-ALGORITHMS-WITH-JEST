@@ -135,7 +135,7 @@ class BetterHashTable {
   }
 }
 
-describe("BETTER HASHING/ LINEAR PROBING", () => {
+describe.skip("BETTER HASHING/ LINEAR PROBING", () => {
   it("BETTERHASH(), Should Compute The Hash Value", () => {
     const hashTable = new BetterHashTable();
 
