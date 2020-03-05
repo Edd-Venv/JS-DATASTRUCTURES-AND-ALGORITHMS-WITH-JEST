@@ -93,7 +93,7 @@ class Set {
   }
 }
 
-describe("", () => {
+describe.skip("SET", () => {
   it("ADD(), Should Put An Element In The DataStore If It Doesn't Already Exist", () => {
     const set = new Set();
     set.add(5);
