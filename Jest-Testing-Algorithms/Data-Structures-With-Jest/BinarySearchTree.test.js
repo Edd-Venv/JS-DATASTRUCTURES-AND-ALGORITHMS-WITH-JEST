@@ -18,6 +18,8 @@ class BinarySearchTree {
   constructor() {
     this.root = null;
     this.insert;
+    this.inOrder;
+    this.putStr;
   }
 
   insert(data) {
@@ -45,6 +47,21 @@ class BinarySearchTree {
       }
     }
   }
+
+  putStr(node) {
+    let str = `${node.show()}` + " ";
+    return str;
+  }
+
+  inOrder(node) {
+    let result = "";
+    if (!(node == null)) {
+      this.inOrder(node.left);
+      result += this.putStr(node);
+      this.inOrder(node.right);
+    }
+    console.log(result);
+  }
 }
 
 describe("BINARY-SEARCH-TREE", () => {
@@ -52,5 +69,17 @@ describe("BINARY-SEARCH-TREE", () => {
     const BST = new BinarySearchTree();
     BST.insert(2);
     expect(BST.root).toMatchObject({ data: 2, left: null, right: null });
+  });
+
+  it("INORDER(), Should Traversal Visits All The Nodes Of A BST", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    BST.insert(3);
+    BST.insert(99);
+    BST.insert(22);
+    BST.inOrder(BST.root);
   });
 });
