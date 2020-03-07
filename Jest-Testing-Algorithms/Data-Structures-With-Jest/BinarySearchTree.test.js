@@ -21,11 +21,13 @@ class BinarySearchTree {
     this.inOrder;
     this.putStr;
     this.findMax;
+    this.remove;
+    this.findMin;
   }
 
   insert(data) {
     const newNode = new Node(data, null, null);
-    if (this.root == null) {
+    if (this.root === null) {
       this.root = newNode;
     } else {
       let current = this.root;
@@ -50,7 +52,7 @@ class BinarySearchTree {
   }
 
   inOrder() {
-    if (this.root == null) {
+    if (this.root === null) {
       return null;
     } else {
       const result = new Array();
@@ -64,12 +66,84 @@ class BinarySearchTree {
     }
   }
 
+  find(data) {
+    let current = this.root;
+    while (current.data !== data) {
+      if (data < current.data) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+      if (current === null) {
+        return null;
+      }
+    }
+    return current;
+  }
+
   findMax() {
     let current = this.root;
     while (current.right !== null) {
       current = current.right;
     }
     return current.data;
+  }
+
+  findMin() {
+    let current = this.root;
+    while (current.left !== null) {
+      current = current.left;
+    }
+    return current.data;
+  }
+
+  isPresent(data) {
+    let current = this.root;
+    while (current) {
+      if (data === current.data) {
+        return true;
+      }
+      if (data < current.data) {
+        current = current.left;
+      } else {
+        current = current.right;
+      }
+    }
+    return false;
+  }
+
+  remove(data) {
+    const removeNode = function(node, data) {
+      if (node === null) {
+        return null;
+      }
+      if (data === node.data) {
+        if (node.left === null && node.right === null) {
+          return null;
+        }
+        if (node.left == null) {
+          return node.right;
+        }
+        if (node.right == null) {
+          return node.left;
+        }
+
+        let tempNode = node.right;
+        while (tempNode.left !== null) {
+          tempNode = tempNode.left;
+        }
+        node.data = tempNode.data;
+        node.right = removeNode(node.right, tempNode.data);
+        return node;
+      } else if (data < node.data) {
+        node.left = removeNode(node.left, data);
+        return node;
+      } else {
+        node.right = removeNode(node.right, data);
+        return node;
+      }
+    };
+    this.root = removeNode(this.root, data);
   }
 }
 
@@ -104,5 +178,42 @@ describe("BINARY-SEARCH-TREE", () => {
     expect(BST.findMax()).toEqual(99);
     BST.insert(105);
     expect(BST.findMax()).toEqual(105);
+  });
+
+  it("FIND(), Should Find A Node In The Tree", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    BST.insert(3);
+    BST.insert(99);
+    BST.insert(22);
+
+    expect(BST.find(5)).toBeFalsy();
+    expect(BST.find(37)).toBeTruthy();
+  });
+
+  it("isPresent(), Should Cheak If A Node Exists In The Tree", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+
+    expect(BST.isPresent(16)).toBeTruthy();
+    expect(BST.isPresent(20)).toBeFalsy();
+  });
+
+  it("REMOVE(), Should Remove A Node In Tree", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    BST.remove(16);
+    expect(BST.root).toHaveProperty("left", null);
+    expect(BST.find(16)).toBeFalsy();
+    expect(BST.isPresent(16)).toBeFalsy();
   });
 });
