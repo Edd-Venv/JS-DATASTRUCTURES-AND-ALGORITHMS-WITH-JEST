@@ -20,6 +20,7 @@ class BinarySearchTree {
     this.insert;
     this.inOrder;
     this.putStr;
+    this.findMax;
   }
 
   insert(data) {
@@ -48,19 +49,27 @@ class BinarySearchTree {
     }
   }
 
-  putStr(node) {
-    let str = `${node.show()}` + " ";
-    return str;
+  inOrder() {
+    if (this.root == null) {
+      return null;
+    } else {
+      const result = new Array();
+      function traverseInOrder(node) {
+        node.left && traverseInOrder(node.left);
+        result.push(node.data);
+        node.right && traverseInOrder(node.right);
+      }
+      traverseInOrder(this.root);
+      return result;
+    }
   }
 
-  inOrder(node) {
-    let result = "";
-    if (!(node == null)) {
-      this.inOrder(node.left);
-      result += this.putStr(node);
-      this.inOrder(node.right);
+  findMax() {
+    let current = this.root;
+    while (current.right !== null) {
+      current = current.right;
     }
-    console.log(result);
+    return current.data;
   }
 }
 
@@ -80,6 +89,20 @@ describe("BINARY-SEARCH-TREE", () => {
     BST.insert(3);
     BST.insert(99);
     BST.insert(22);
-    BST.inOrder(BST.root);
+    expect(BST.inOrder(BST.root)).toEqual([3, 16, 22, 23, 37, 45, 99]);
+  });
+
+  it("FINDMAX(), Should Find The Max Data On The Right Child Of The Root", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    BST.insert(3);
+    BST.insert(99);
+    BST.insert(22);
+    expect(BST.findMax()).toEqual(99);
+    BST.insert(105);
+    expect(BST.findMax()).toEqual(105);
   });
 });
