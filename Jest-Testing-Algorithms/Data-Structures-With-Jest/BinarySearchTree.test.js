@@ -23,6 +23,8 @@ class BinarySearchTree {
     this.findMax;
     this.remove;
     this.findMin;
+    this.findMinHeight;
+    this.findMaxHeight;
   }
 
   insert(data) {
@@ -145,6 +147,36 @@ class BinarySearchTree {
     };
     this.root = removeNode(this.root, data);
   }
+
+  findMinHeight(node = this.root) {
+    if (node == null) {
+      return -1;
+    }
+    let left = this.findMinHeight(node.left);
+    let right = this.findMinHeight(node.right);
+    if (left < right) {
+      return left + 1;
+    } else {
+      return right + 1;
+    }
+  }
+
+  findMaxHeight(node = this.root) {
+    if (node == null) {
+      return -1;
+    }
+    let left = this.findMaxHeight(node.left);
+    let right = this.findMaxHeight(node.right);
+    if (left > right) {
+      return left + 1;
+    } else {
+      return right + 1;
+    }
+  }
+
+  isBalanced() {
+    return this.findMinHeight() >= this.findMaxHeight() - 1;
+  }
 }
 
 describe("BINARY-SEARCH-TREE", () => {
@@ -194,7 +226,38 @@ describe("BINARY-SEARCH-TREE", () => {
     expect(BST.find(37)).toBeTruthy();
   });
 
-  it("isPresent(), Should Cheak If A Node Exists In The Tree", () => {
+  it("FINDMIN(), Should Find The Node With The Mininmum Data", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    expect(BST.findMin()).toBe(16);
+    BST.insert(10);
+    expect(BST.findMin()).toBe(10);
+  });
+
+  it("FINDMINHEIGHT(), Should Find The Minimum Level", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    BST.insert(10);
+    expect(BST.findMinHeight()).toBe(1);
+  });
+
+  it("FINDMAXHEIGHT(), Should Find The Minimum Level", () => {
+    const BST = new BinarySearchTree();
+    BST.insert(23);
+    BST.insert(45);
+    BST.insert(16);
+    BST.insert(37);
+    BST.insert(10);
+    expect(BST.findMaxHeight()).toBe(2);
+  });
+
+  it("ISPRESENT(), Should Cheak If A Node Exists In The Tree", () => {
     const BST = new BinarySearchTree();
     BST.insert(23);
     BST.insert(45);
@@ -215,5 +278,6 @@ describe("BINARY-SEARCH-TREE", () => {
     expect(BST.root).toHaveProperty("left", null);
     expect(BST.find(16)).toBeFalsy();
     expect(BST.isPresent(16)).toBeFalsy();
+    expect(BST.findMin()).toBe(23);
   });
 });
