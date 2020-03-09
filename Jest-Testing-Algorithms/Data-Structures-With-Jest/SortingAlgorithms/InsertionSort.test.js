@@ -1,22 +1,24 @@
 const importedArrayTestBed = require("../ArrayTestBed.test.js");
 const ArrayTestBed = importedArrayTestBed.exportedArrayTestBed;
 
-function bubbleSort(arr) {
-  for (let i = 0; i < arr.numElements; i++) {
-    for (let j = 0; j < arr.numElements; j++) {
-      if (arr.dataStore[i] < arr.dataStore[j]) {
-        arr.swap(arr.dataStore, i, j);
-      }
+function insertionSort(arr) {
+  let temp, j;
+  for (let i = 1; i < arr.dataStore.length; i++) {
+    temp = arr.dataStore[i];
+    j = i;
+    while (j > 0 && arr.dataStore[j - 1] > temp) {
+      arr.dataStore[j] = arr.dataStore[j - 1];
+      j--;
     }
+    arr.dataStore[j] = temp;
   }
-  return arr.dataStore;
 }
 
-describe.skip("BUBBLESORT", () => {
+describe("INSERTIONSORT", () => {
   it("Should Sort An Array In Accending Order", () => {
-    const array = new ArrayTestBed(5);
+    const array = new ArrayTestBed(10000);
     array.setData();
-    bubbleSort(array);
+    insertionSort(array);
     expect(array.dataStore[0]).toBeLessThanOrEqual(array.dataStore[1]);
     expect(array.dataStore[0]).toBeLessThanOrEqual(array.dataStore[3]);
   });
