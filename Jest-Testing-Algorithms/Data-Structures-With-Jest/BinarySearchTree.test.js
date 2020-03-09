@@ -238,7 +238,7 @@ class BinarySearchTree {
   }
 }
 
-describe("BINARY-SEARCH-TREE", () => {
+describe.skip("BINARY-SEARCH-TREE", () => {
   it("INSERT(), Should Add A New Node, Either Left Or Right Of The BSTree, Depending On The Value Of The Data", () => {
     const BST = new BinarySearchTree();
     BST.insert(2);
