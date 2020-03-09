@@ -1,24 +1,34 @@
 const importedArrayTestBed = require("../ArrayTestBed.test.js");
 const ArrayTestBed = importedArrayTestBed.exportedArrayTestBed;
 
-function insertionSort(arr) {
-  let temp, j;
-  for (let i = 1; i < arr.dataStore.length; i++) {
-    temp = arr.dataStore[i];
-    j = i;
-    while (j > 0 && arr.dataStore[j - 1] > temp) {
-      arr.dataStore[j] = arr.dataStore[j - 1];
-      j--;
+const setGaps = arr => {
+  //[701, 301, 132, 57, 23, 10, 4, 1]
+  return arr;
+};
+
+function shellSort(arr) {
+  const gaps = setGaps([701, 301, 132, 57, 23, 10, 4, 1]);
+  for (let g = 0; g < gaps.length; g++) {
+    for (let i = gaps[g]; i < arr.dataStore.length; i++) {
+      let temp = arr.dataStore[i];
+      let j;
+      for (
+        j = i;
+        j >= gaps[g] && arr.dataStore[j - gaps[g]] > temp;
+        j -= gaps[g]
+      ) {
+        arr.dataStore[j] = arr.dataStore[j - gaps[g]];
+      }
+      arr.dataStore[j] = temp;
     }
-    arr.dataStore[j] = temp;
   }
 }
 
-describe.skip("INSERTIONSORT", () => {
+describe("SHELLSORT", () => {
   it("Should Sort An Array In Accending Order", () => {
     const array = new ArrayTestBed(10);
     array.setData();
-    insertionSort(array);
+    shellSort(array);
     expect(array.dataStore[0]).toBeLessThanOrEqual(array.dataStore[1]);
     expect(array.dataStore[0]).toBeLessThanOrEqual(array.dataStore[3]);
   });
