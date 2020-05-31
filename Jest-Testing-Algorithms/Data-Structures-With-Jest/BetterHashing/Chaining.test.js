@@ -156,6 +156,7 @@ describe.skip("BETTER HASHING/ CHAINING", () => {
 
   it("GET(), Should Return Data Stored In A Hash Table If It Exists Else It Should Return The Array At That Key", () => {
     const hashTable = new BetterHashTable();
+
     hashTable.buildChains();
     hashTable.put(1, 7755);
     hashTable.put(1, "Clayton");
@@ -223,7 +224,7 @@ describe.skip("BETTER HASHING/ CHAINING", () => {
       "Clayton",
       "Danny",
       "Jonathan",
-      444
+      444,
     ];
 
     for (let i = 0; i < someNames.length; ++i) {
